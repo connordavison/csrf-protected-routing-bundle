@@ -1,0 +1,28 @@
+{
+    "name": "cdavison/csrf-protected-routing-bundle",
+    "type": "symfony-bundle",
+    "description": "Extension to Symfony's framework bundle to allow easier CSRF-protected routing.",
+    "version": "0.1.0",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Connor Davison",
+	    "email": "connorpdavison@gmail.com"
+	}
+    ],
+    "autoload": {
+        "psr-4": {
+            "Davison\\CsrfProtectedRoutingBundle\\": "src/"
+        }
+    },
+    "require": {
+	"php": "^7.0",
+        "symfony/http-kernel": "^2.7 || ^3.0",
+        "symfony/security": "^2.7 || ^3.0",
+        "symfony/routing": "^2.7 || ^3.0",
+        "symfony/dependency-injection": "^2.7 || ^3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.4"
+    }
+}

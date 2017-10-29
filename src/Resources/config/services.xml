@@ -1,0 +1,50 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    
+    <parameters>
+        <parameter key="csrf_protected_routing.authentication.token_requirement_checker.class">Davison\CsrfProtectedRoutingBundle\Authentication\TokenRequirementChecker</parameter>
+        <parameter key="csrf_protected_routing.authentication.routing_token_manager.class">Davison\CsrfProtectedRoutingBundle\Authentication\RoutingTokenManager</parameter>
+        <parameter key="csrf_protected_routing.routing.token_parameter_resolver.class">Davison\CsrfProtectedRoutingBundle\Routing\TokenParameterResolver</parameter>
+        <parameter key="csrf_protected_routing.routing.url_generator.class">Davison\CsrfProtectedRoutingBundle\Routing\CsrfProtectedUrlGenerator</parameter>
+        <parameter key="csrf_protected_routing.authentication.request_validator.class">Davison\CsrfProtectedRoutingBundle\Authentication\RequestValidator</parameter>
+        <parameter key="csrf_protected_routing.listener.validate_request.class">Davison\CsrfProtectedRoutingBundle\Listener\ValidateRequestListener</parameter>
+    </parameters>
+
+    <services>
+        <defaults public="false" />
+
+        <service id="csrf_protected_routing.authentication.token_requirement_checker" class="%csrf_protected_routing.authentication.token_requirement_checker.class%">
+            <argument>%csrf_protected_routing.routes%</argument>
+        </service>
+
+        <service id="csrf_protected_routing.authentication.routing_token_manager" class="%csrf_protected_routing.authentication.routing_token_manager.class%">
+            <argument type="service" id="security.csrf.token_manager" />
+            <argument>%csrf_protected_routing.token_id%</argument>
+        </service>
+
+        <service id="csrf_protected_routing.routing.token_parameter_resolver" class="%csrf_protected_routing.routing.token_parameter_resolver.class%">
+            <argument type="service" id="csrf_protected_routing.authentication.token_requirement_checker" />
+            <argument type="service" id="csrf_protected_routing.authentication.routing_token_manager" />
+            <argument>%csrf_protected_routing.request_parameter%</argument>
+        </service>
+
+        <service id="csrf_protected_routing.routing.url_generator" class="%csrf_protected_routing.routing.url_generator.class%">
+            <argument type="service" id="router" />
+            <argument type="service" id="csrf_protected_routing.routing.token_parameter_resolver" />
+        </service>
+
+        <service id="csrf_protected_routing.authentication.request_validator" class="%csrf_protected_routing.authentication.request_validator.class%">
+            <argument type="service" id="csrf_protected_routing.authentication.token_requirement_checker" />
+            <argument type="service" id="csrf_protected_routing.authentication.routing_token_manager" />
+            <argument>%csrf_protected_routing.request_parameter%</argument>
+        </service>
+
+        <service id="csrf_protected_routing.listener.validate_request" class="%csrf_protected_routing.listener.validate_request.class%">
+            <argument type="service" id="csrf_protected_routing.authentication.request_validator" />
+            <tag name="kernel.event_listener" event="kernel.request" />
+        </service>
+    </services>
+</container>
